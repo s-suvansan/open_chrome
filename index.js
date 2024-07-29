@@ -27,7 +27,7 @@ wss.on("connection", (ws) => {
 });
 
 const server = app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running in live`);
 });
 
 server.on("upgrade", (request, socket, head) => {
@@ -39,9 +39,18 @@ server.on("upgrade", (request, socket, head) => {
 app.use(express.json());
 
 app.post("/open-chrome", (req, res) => {
-  const url = req.body.url || "http://example.com";
-  const chromePath = "C:/Program Files/Google/Chrome/Application/chrome.exe"; // Update this path as necessary
+  const url = req.body.url;
+  const platform = req.body.platform || "windows";
+  // const chromePath = "C:/Program Files/Google/Chrome/Application/chrome.exe"; // Update this path as necessary
   const command = `start chrome "${url}"`;
+
+  if (platform == "windows") {
+    command = `start chrome "${url}"`;
+  } else if (platform == "macos") {
+    command = `open -a "Google Chrome" "${url}"`;
+  } else if (platform == "linux") {
+    command = `google-chrome "${url}"`;
+  }
   // "${chromePath}" "${url}"
   require("child_process").exec(command, (err) => {
     if (err) {
