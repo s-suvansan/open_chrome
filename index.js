@@ -15,8 +15,18 @@ wss.on("connection", (ws) => {
   ws.on("message", (message) => {
     console.log(`Received message: ${message}`);
     if (pendingResponse) {
+      // try {
+      //   if (message != "" && message != undefined) {
+      //     pendingResponse.json(JSON.parse(message));
+      //   } else {
+      //     pendingResponse.json({});
+      //   }
+      // } catch (error) {
+      //   pendingResponse.json(message);
+      // }
       pendingResponse.send(message);
       pendingResponse = null; // Clear the pending response
+      wsClient = null;
     }
   });
 
@@ -44,13 +54,13 @@ app.post("/open-chrome", (req, res) => {
   // const chromePath = "C:/Program Files/Google/Chrome/Application/chrome.exe"; // Update this path as necessary
   const command = `start chrome "${url}"`;
 
-  if (platform == "windows") {
-    command = `start chrome "${url}"`;
-  } else if (platform == "macos") {
-    command = `open -a "Google Chrome" "${url}"`;
-  } else if (platform == "linux") {
-    command = `google-chrome "${url}"`;
-  }
+  // if (platform == "windows") {
+  //   command = `start chrome "${httpwww.google.com}"`;
+  // } else if (platform == "macos") {
+  //   command = `open -a "Google Chrome" "${url}"`;
+  // } else if (platform == "linux") {
+  //   command = `google-chrome "${url}"`;
+  // }
   // "${chromePath}" "${url}"
   require("child_process").exec(command, (err) => {
     if (err) {
